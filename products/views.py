@@ -1,24 +1,42 @@
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.permissions import IsAdminUser
 
 from .models import Product
-from .serializers import ProductSerializer
+from .serializers import ProductWriteSerializer, ProductReadSerializer
 
 
+# product lisitng view (for all users)
 class ProductListView(generics.ListAPIView):
-
     queryset = Product.objects.filter(is_active=True)
-    serializer_class = ProductSerializer
-
+    serializer_class = ProductReadSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
-
     filterset_fields = ["category__slug"]
-
     search_fields = ["name", "description"]
 
 
 class ProductDetailView(generics.RetrieveAPIView):
-
     queryset = Product.objects.filter(is_active=True)
-    serializer_class = ProductSerializer
+    serializer_class = ProductReadSerializer
+
+
+# create a product (only by admin)
+class ProductCreateView(generics.CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductWriteSerializer
+    permission_classes = [IsAdminUser]
+
+
+# update a product (only by admin)
+class ProductUpdateView(generics.UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductWriteSerializer
+    permission_classes = [IsAdminUser]
+
+
+# delete a product (only by admin)
+class ProductDeleteView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductWriteSerializer
+    permission_classes = [IsAdminUser]
