@@ -7,7 +7,7 @@ __pycache__/
 # C extensions
 *.so
 
-DEV_NOTES.md
+dev_notes.md
 
 # Distribution / packaging
 .Python
