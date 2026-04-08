@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Cart, CartItem
-from .serializers import CartSerializer, AddCartItemSerializer
+from .serializers import CartSerializer, AddCartItemSerializer, UpdateCartItemSerializer
 
 
 # helper function to get or create a cart for a user
@@ -59,6 +59,50 @@ class AddToCartView(generics.GenericAPIView):
             cart_item.save()
 
         return Response({"message": "Item added to cart"})
+
+
+
+
+# view to update cart item quantity or remove item if quantity = 0
+class UpdateCartItemView(generics.GenericAPIView):
+
+    serializer_class = UpdateCartItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    # only allow user's own cart items
+    def get_queryset(self):
+        return CartItem.objects.filter(cart__user=self.request.user)
+
+    def patch(self, request, pk):
+        # validate input data
+        serializer = self.get_serializer(data=request.data)
+        # will raise 400 error if validation fails (e.g. missing quantity or invalid value)
+        serializer.is_valid(raise_exception=True)
+        # get the cart item to update (will raise 404 if not found or does not belong to user)
+        cart_item = self.get_object()
+        # get the new quantity from validated data
+        quantity = serializer.validated_data["quantity"]
+
+        # if quantity = 0 → remove item
+        if quantity == 0:
+            cart_item.delete()
+            return Response({"message": "Item removed"})
+
+        # validate that requested quantity does not exceed available stock
+        if quantity > cart_item.product.inventory.stock:
+            return Response(
+                {"error": "Not enough stock"},
+                status=400
+            )
+        
+        # if validation passes, update the cart item quantity
+        cart_item.quantity = quantity
+        # save the updated cart item to the database
+        cart_item.save()
+
+        return Response({"message": "Cart updated"})
+
+
 
 
 # view to remove an item from the cart

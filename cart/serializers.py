@@ -52,3 +52,9 @@ class AddCartItemSerializer(serializers.Serializer):
         # if validation passes, include the product instance in validated data for use in view
         data["product"] = product
         return data
+    
+
+# serializer for updating cart item quantity
+class UpdateCartItemSerializer(serializers.Serializer):
+
+    quantity = serializers.IntegerField(min_value=0)
