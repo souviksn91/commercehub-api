@@ -3,11 +3,13 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
+from rest_framework import metadata, status
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from drf_spectacular.utils import extend_schema
 
 from orders.models import Order
+from .serializers import CreatePaymentIntentSerializer
 
 
 
@@ -19,9 +21,16 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 class CreatePaymentIntentView(APIView):
 
     permission_classes = [IsAuthenticated]
+    # define the expected input for this endpoint 
+    @extend_schema(
+        request=CreatePaymentIntentSerializer
+    )
 
     def post(self, request):
-        order_id = request.data.get("order_id")
+
+        serializer = CreatePaymentIntentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        order_id = serializer.validated_data["order_id"]
 
         try:
             # fetch the order and ensure it belongs to the authenticated user
@@ -81,15 +90,25 @@ def stripe_webhook(request):
     if event["type"] == "payment_intent.succeeded":
 
         intent = event["data"]["object"]  # the PaymentIntent object
-        order_id = intent["metadata"]["order_id"]  # retrieve order ID from metadata
+
+        # extract order_id from the PaymentIntent's metadata (set when creating the intent)
+        # metadata = dict(intent.metadata) if intent.metadata else {} 
+        order_id = intent.metadata["order_id"] if "order_id" in intent.metadata else None
+
+        if not order_id:
+            print("No order_id in metadata — skipping")  # debug statement
+            return HttpResponse(status=200)  # ignore silently
 
         # update the corresponding order's status to PAID in the database
         try:
             order = Order.objects.get(id=order_id)
             order.status = "PAID"
             order.save()
+            
+            print(f"Order {order_id} marked as PAID")  # debug statement
+
 
         except Order.DoesNotExist:
-            pass
+            print("Order not found")  # debug statement
 
     return HttpResponse(status=200)
