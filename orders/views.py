@@ -1,11 +1,12 @@
 from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.shortcuts import get_object_or_404
 
 from .services import create_order_from_cart
 from .models import Order
-from .serializers import OrderSerializer
+from .serializers import OrderSerializer, UpdateOrderStatusSerializer
 
 
 # API endpoint to handle checkout process
@@ -71,15 +72,22 @@ class UpdateOrderStatusView(APIView):
 
     permission_classes = [IsAdminUser]
 
+    @extend_schema(
+        request=UpdateOrderStatusSerializer
+    )
+
     def patch(self, request, pk):
-        order = get_object_or_404(Order, id=pk)
 
-        new_status = request.data.get("status")
+        serializer = UpdateOrderStatusSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        if new_status not in ["PENDING", "PAID", "CANCELLED", "SHIPPED"]:
-            return Response({"error": "Invalid status"}, status=400)
+        try:
+            order = Order.objects.get(id=pk)
 
-        order.status = new_status
-        order.save()
+            order.status = serializer.validated_data["status"]
+            order.save()
 
-        return Response({"message": "Order status updated"})
+            return Response({"message": "Order status updated"})
+
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=404)

@@ -4,6 +4,13 @@ from .models import Order, OrderItem
 
 # serializer for individual order items
 class OrderItemSerializer(serializers.ModelSerializer):
+
+    price = serializers.DecimalField(
+        source="price_at_purchase",
+        max_digits=10,
+        decimal_places=2
+    )
+
     class Meta:
         model = OrderItem
         fields = ["id", "product_name", "price", "quantity"]
@@ -11,6 +18,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 # serializer for order details (with nested items)
 class OrderSerializer(serializers.ModelSerializer):
+    
     items = OrderItemSerializer(many=True, read_only=True)
 
     class Meta:
@@ -22,3 +30,8 @@ class OrderSerializer(serializers.ModelSerializer):
             "created_at",
             "items"
         ]
+
+
+
+class UpdateOrderStatusSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(choices=Order.STATUS_CHOICES)
