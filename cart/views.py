@@ -58,7 +58,16 @@ class AddToCartView(generics.GenericAPIView):
 
             cart_item.save()
 
-        return Response({"message": "Item added to cart"})
+        cart_items = CartItem.objects.filter(cart=cart)
+        total_items = sum(item.quantity for item in cart_items)
+
+        return Response({
+            "message": "Item added to cart", 
+            "product_id": str(product.id),
+            "product_name": product.name,
+            "quantity": cart_item.quantity,
+            "total_items_in_cart": total_items
+            })
 
 
 

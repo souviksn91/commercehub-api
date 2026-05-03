@@ -19,12 +19,16 @@ class OrderItemSerializer(serializers.ModelSerializer):
 # serializer for order details (with nested items)
 class OrderSerializer(serializers.ModelSerializer):
     
+    user_id = serializers.UUIDField(source="user.id", read_only=True)
+    user_email = serializers.EmailField(source="user.email", read_only=True)
     items = OrderItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
         fields = [
             "id",
+            "user_id",
+            "user_email",
             "status",
             "total_price",
             "created_at",

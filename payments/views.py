@@ -36,6 +36,21 @@ class CreatePaymentIntentView(APIView):
             # fetch the order and ensure it belongs to the authenticated user
             order = Order.objects.get(id=order_id, user=request.user)
 
+            # prevent duplicate payment intents for the same order
+            if order.status == "PAID":
+                return Response(
+                    {"error": "Order is already paid"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # ensure order has items 
+            if not order.items.exists():
+                return Response(
+                    {"error": "Order has no items"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            
             # convert price to smallest currency unit (paise for INR)
             amount = int(order.total_price * 100)
 
