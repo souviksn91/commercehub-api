@@ -161,6 +161,18 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend"
     ],
 
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/day",
+        "user": "1000/day",
+        "login": "5/minute",
+        "register": "5/minute",
+        "payment": "10/minute",
+    },
+
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",

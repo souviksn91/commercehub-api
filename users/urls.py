@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView
+from .views import RegisterView, LoginView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.utils import extend_schema_view, extend_schema
 
@@ -14,7 +14,7 @@ urlpatterns = [
                 summary="User Login",
                 description="Authenticate a user and return JWT tokens"
             )
-        )(TokenObtainPairView).as_view(), 
+        )(LoginView).as_view(), 
           name="login"
     ),
     path(

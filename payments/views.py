@@ -7,6 +7,7 @@ from rest_framework import metadata, status
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema
+from rest_framework.throttling import UserRateThrottle
 
 from orders.models import Order
 from .serializers import CreatePaymentIntentSerializer
@@ -16,12 +17,16 @@ from .serializers import CreatePaymentIntentSerializer
 # set Stripe API key
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+class PaymentRateThrottle(UserRateThrottle):
+    scope = "payment"
+
 
 # creates a Stripe PaymentIntent for an order
 class CreatePaymentIntentView(APIView):
 
     serializer_class = CreatePaymentIntentSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [PaymentRateThrottle]  # apply payment throttle
     # define the expected input for this endpoint 
     @extend_schema(
         request=CreatePaymentIntentSerializer,
