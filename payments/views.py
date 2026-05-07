@@ -20,11 +20,17 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # creates a Stripe PaymentIntent for an order
 class CreatePaymentIntentView(APIView):
 
+    serializer_class = CreatePaymentIntentSerializer
     permission_classes = [IsAuthenticated]
     # define the expected input for this endpoint 
     @extend_schema(
-        request=CreatePaymentIntentSerializer
+        request=CreatePaymentIntentSerializer,
+        summary="Create Stripe payment intent",
+        description="Create a Stripe PaymentIntent for the specified order to initiate the payment process",
+
     )
+
+    
 
     def post(self, request):
 

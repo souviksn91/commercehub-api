@@ -15,7 +15,14 @@ from .serializers import OrderSerializer, UpdateOrderStatusSerializer
 # API endpoint to handle checkout process
 class CheckoutView(APIView):
 
+    serializer_class = None  # serializer added for swagger documentation
     permission_classes = [IsAuthenticated]
+
+    # swagger documentation for this endpoint
+    @extend_schema(
+        summary="Checkout and create order",
+        description="Create an order from the user's cart and clear the cart after successful order creation",
+    )
 
     # POST /api/checkout/ - create an order from the user's cart
     def post(self, request):
@@ -40,8 +47,13 @@ class CheckoutView(APIView):
 
 
 # API endpoint to list all orders for the authenticated user
+@extend_schema(
+    summary="List user orders",
+    description="Retrieve a list of orders for the authenticated user",
+)
 class UserOrderListView(generics.ListAPIView):
 
+    queryset = Order.objects.none()  # empty queryset added for swagger documentation
     permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
 
@@ -55,6 +67,10 @@ class UserOrderListView(generics.ListAPIView):
     
 
 # API endpoint to get details of a specific order for the authenticated user
+@extend_schema(
+    summary="Get order details",
+    description="Retrieve details of a specific order for the authenticated user",
+)
 class UserOrderDetailView(generics.RetrieveAPIView):
 
     permission_classes = [IsAuthenticated]
@@ -65,6 +81,10 @@ class UserOrderDetailView(generics.RetrieveAPIView):
     
 
 # API endpoint to list all orders for admin users
+@extend_schema(
+    summary="List all orders (admin)",
+    description="Admin endpoint to retrieve all orders with filtering, search, and ordering capabilities",
+)
 class AdminOrderListView(generics.ListAPIView):
 
     permission_classes = [IsAdminUser]
@@ -84,10 +104,13 @@ class AdminOrderListView(generics.ListAPIView):
 # API endpoint to update order status (admin only)
 class UpdateOrderStatusView(APIView):
 
+    serializer_class = UpdateOrderStatusSerializer
     permission_classes = [IsAdminUser]
 
     @extend_schema(
-        request=UpdateOrderStatusSerializer
+        request=UpdateOrderStatusSerializer,
+        summary="Update order status (admin)",
+        description="Update the status of an order (PENDING, PAID, SHIPPED, CANCELLED)",
     )
 
     def patch(self, request, pk):

@@ -176,7 +176,7 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "CommerceHub API",
-    "DESCRIPTION": "Backend API for CommerceHub E-commerce system",
+    "DESCRIPTION": "Backend API for an e-commerce platform (cart, orders, payments, products)",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }

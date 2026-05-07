@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 
 from .models import Cart, CartItem
 from .serializers import CartSerializer, AddCartItemSerializer, UpdateCartItemSerializer
@@ -14,6 +15,10 @@ def get_or_create_cart(user):
 
 
 # view to retrieve the current user's cart
+@extend_schema(
+    summary="Get user cart",
+    description="Retrieve the authenticated user's cart and cart items"
+)
 class CartView(generics.RetrieveAPIView):
 
     serializer_class = CartSerializer
@@ -29,6 +34,14 @@ class AddToCartView(generics.GenericAPIView):
     serializer_class = AddCartItemSerializer
     permission_classes = [IsAuthenticated]
 
+    # swagger documentation for this endpoint
+    @extend_schema(
+        request=AddCartItemSerializer,
+        summary="Add product to cart",
+        description="Add a product to the user's cart or update quantity if it already exists",
+    )
+    
+    
     # handle POST request to add/update cart item
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -73,6 +86,9 @@ class AddToCartView(generics.GenericAPIView):
 
 
 # view to update cart item quantity or remove item if quantity = 0
+@extend_schema(
+    summary="Update cart item quantity",
+)
 class UpdateCartItemView(generics.GenericAPIView):
 
     serializer_class = UpdateCartItemSerializer
@@ -115,9 +131,13 @@ class UpdateCartItemView(generics.GenericAPIView):
 
 
 # view to remove an item from the cart
+@extend_schema(
+    summary="Remove item from cart",
+    description="Remove a product from the user's cart"
+)
 class RemoveCartItemView(generics.DestroyAPIView):
-
-
+    
+    serializer_class = CartSerializer
     permission_classes = [IsAuthenticated]
     # queryset will be filtered to only include items from the current user's cart
     def get_queryset(self):
