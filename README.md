@@ -1,7 +1,7 @@
 # CommerceHub API
-A production-ready E-commerce REST API built with Django REST Framework.
+A production-ready E-commerce REST API built with Django REST Framework, PostgreSQL, JWT authentication, and Stripe integration.
 
-Supports authentication, products, cart management, order processing, inventory tracking, Stripe payments, filtering, pagination, throttling, and Swagger API documentation.
+Supports authentication, product management, cart operations, order processing, inventory tracking, Stripe payments, filtering, pagination, throttling, and Swagger API documentation.
 
 
 ## Backend Highlights
@@ -9,7 +9,7 @@ Supports authentication, products, cart management, order processing, inventory 
 - Clean RESTful API design
 - JWT authentication with protected endpoints
 - UUID-based primary keys across products, orders, categories, and cart resources
-- Stripe payment integration
+- Stripe payment processing
 - Custom object-level permissions
 - Nested routing
 - DRF filtering, searching, ordering, and pagination
@@ -19,19 +19,19 @@ Supports authentication, products, cart management, order processing, inventory 
 ## Purpose & User Flow
 
 Users can:
-- register and authenticate using JWT
-- browse and search products
-- add products to cart
-- manage cart quantities
-- checkout and create orders
-- make payments using Stripe
-- track order status
+- Register and authenticate using JWT
+- Browse and search products
+- Add products to cart
+- Manage cart quantities
+- Checkout and create orders
+- Make payments using Stripe
+- Track order status
 
 Admins can:
-- manage products and categories
-- monitor customer orders
-- update order statuses
-- manage inventory stock
+- Manage products and categories
+- Monitor customer orders
+- Update order statuses
+- Manage inventory stock
 
 
 ## Tech Stack

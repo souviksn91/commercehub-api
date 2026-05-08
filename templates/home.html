@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="header">
+    <div class="logo">CommerceHub API</div>
+
+    <div class="button-group">
+        <a href="https://github.com/souviksn91/commercehub-api" class="btn btn-outline" target="_blank">
+            View on GitHub  
+        </a>
+
+        <a href="/api/docs/" class="btn btn-solid" target="_blank">
+            Open API Docs
+        </a>
+    </div>
+</div>
+
+<div class="divider-main"></div>
+
+<!-- Intro -->
+<p class="intro">
+    A production-ready E-commerce REST API built with Django REST Framework, PostgreSQL, JWT authentication, and Stripe integration.
+</p>
+
+<p class="paragraph">
+    Supports authentication, product management, cart operations, order processing, inventory tracking, Stripe payments, filtering, pagination, throttling, and Swagger API documentation.
+</p>
+
+
+<!-- Link -->
+<p class="subheading" style="margin-bottom: 20px;">Interactive Swagger/OpenAPI documentation available at:</p>
+<a href="/api/docs/" class="btn btn-blck-solid" target="_blank" style="font-weight: 300;">/api/docs/</a>
+<div class="section-divider"></div>
+
+
+<!-- Highlights -->
+<p class="section-title">Backend Highlights</p>
+<ul>
+    <li>Clean RESTful API design</li>
+    <li>JWT authentication with protected endpoints</li>
+    <li>UUID-based primary keys across products, orders, categories, and cart resources</li>
+    <li>Stripe payment processing</li>
+    <li>Custom object-level permissions</li>
+    <li>Nested routing</li>
+    <li>DRF filtering, searching, ordering, and pagination</li>
+    <li>Throttling (rate limiting)</li>
+    <li>Production-aware architecture decisions</li>
+</ul>
+
+<div class="section-divider"></div>
+
+<!-- Tech Stack -->
+<p class="section-title">Tech Stack</p>
+<ul>
+    <li>Python</li>
+    <li>Django</li>
+    <li>Django REST Framework</li>
+    <li>PostgreSQL</li>
+    <li>JWT authentication</li>
+    <li>Stripe API</li>
+    <li>Docker</li>
+    <li>drf-spectacular (Swagger documentation)</li>
+</ul>
+
+<div class="section-divider"></div>
+
+
+<!-- User FLow -->
+<p class="section-title">Purpose & User Flow</p>
+
+<p class="subheading">Users can:</p>
+<ul>
+    <li>Register and authenticate using JWT</li>
+    <li>Browse and search products</li>
+    <li>Manage their cart (add/remove items)</li>
+    <li>Manage cart item quantities</li>
+    <li>Checkout and place orders</li>
+    <li>Make payments via Stripe</li>
+    <li>Track order status</li>
+    <li>View order history</li>
+</ul>
+<p class="subheading">Admin users can:</p>
+<ul>
+    <li>Manage products and categories</li>
+    <li>View and manage all orders</li>
+    <li>Update order statuses</li>
+    <li>Track inventory levels</li>
+</ul>
+
+<div class="section-divider"></div>
+
+<!-- Core Modules -->
+<p class="section-title">Core Modules</p>
+
+<p class="subheading">Authentication:</p>
+<ul>
+    <li>JWT authentication</li>
+    <li>Login and token refresh</li>
+    <li>Protected routes</li>
+    <li>Role-based permissions</li>
+</ul>
+
+<p class="subheading">Product Management:</p>
+<ul>
+    <li>CRUD operations</li>
+    <li>Category management</li>
+    <li>Search</li>
+    <li>Filtering</li>
+    <li>Ordering</li>
+    <li>Pagination</li>
+</ul>
+
+<p class="subheading">Cart Management:</p>
+<ul>
+    <li>Add/remove/update items</li>
+    <li>Quantity validation</li>
+    <li>Stock validation</li>
+</ul>
+
+<p class="subheading">Order Management:</p>
+<ul>
+    <li>Checkout and create an order</li>
+    <li>Order history</li>
+    <li>Order status tracking</li>
+    <li>Admin order management</li>
+</ul>
+
+<p class="subheading">Payment Management:</p>
+<ul>
+    <li>Stripe Payment Integration</li>
+    <li>Webhook handling</li>
+    <li>Payment validation</li>
+    <li>Duplicate payment prevention</li>
+</ul>
+
+<p class="subheading">Security & Production Features:</p>
+<ul>
+    <li>Throttling (rate limiting)</li>
+    <li>Input validation</li>
+    <li>Custom permissions</li>
+    <li>Pagination</li>
+    <li>Swagger API documentation</li>
+</ul>
+
+<div class="section-divider"></div>
+
+<!-- How to Test -->
+<p class="section-title">How to Test</p>
+<ol>
+    <li>Register a user (/api/auth/register/)</li>
+    <li>Login and obtain a JWT token (/api/auth/login/)</li>
+    <li>Authorize using the access token in Swagger</li>
+    <li>Create product categories (admin only)</li>
+    <li>Create products linked to categories (admin only)</li>
+    <li>Browse products with filtering, searching, and ordering</li>
+    <li>Add products to cart</li>
+    <li>Update cart item quantities</li>
+    <li>Checkout and create an order</li>
+    <li>Create Stripe payment intent</li>
+    <li>View user orders and order details</li>
+    <li>Update order status as admin</li>
+</ol>
+
+<!-- Footer -->
+<div class="footer">
+    <p class="footer-text">
+        Created by <span class="footer-name">Souvik Sinha</span>
+    </p>
+</div>
+
+{% endblock %}
